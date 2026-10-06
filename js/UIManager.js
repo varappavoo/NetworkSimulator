@@ -414,15 +414,14 @@ var UIManager = function()
                 switch (action)
                 {
                     case ACTION_MOUSE_UP:
-                        if (element_dragged)
-                        {
-                            state = STATE_ELEMENT_SELECTED_MOUSE_UP;
-                        }
-                        else
+                        // Preserve the original state transition. Opening the
+                        // contextual menu here is visual only; menu actions
+                        // continue to use the simulator's original state machine.
+                        if (!element_dragged && network.getSelected() !== null)
                         {
                             network.getSelected().getMenu().show();
-                            state = STATE_ELEMENT_MENU_VISIBLE;
                         }
+                        state = STATE_ELEMENT_SELECTED_MOUSE_UP;
                         break;
                     case ACTION_MOUSE_MOVE:
                         element_dragged = true;
