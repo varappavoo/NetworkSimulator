@@ -691,6 +691,17 @@ var UIManager = function()
         }
     }
 
+    this.closeContextMenus = function()
+    {
+        for (var id in menus)
+        {
+            if (menus[id].getVisible() && (!menus[id].isFixed || !menus[id].isFixed()))
+            {
+                menus[id].hide();
+            }
+        }
+    };
+
     this.menuOptionClicked = function()
     {
         dispatchEvent(-1, -1, ACTION_MENU_OPTION_CLICKED);
