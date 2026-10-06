@@ -65,7 +65,19 @@ var UIMenu = function(description, X,Y, fixed)
     {
         X = cX;
         Y = cY;
-    }
+    };
+
+    // Position a menu using canvas coordinates. Menus are DOM elements, while
+    // network objects are drawn in the canvas coordinate system; convert
+    // between the two so the menu stays beside the selected object even when
+    // the canvas is scaled, offset or the page is scrolled.
+    this.setCanvasPos = function(cX, cY)
+    {
+        var canvas = document.getElementById("simcanvas");
+        var bbox = canvas.getBoundingClientRect();
+        X = window.pageXOffset + bbox.left + cX * (bbox.width / canvas.width);
+        Y = window.pageYOffset + bbox.top + cY * (bbox.height / canvas.height);
+    };
 
     this.setDescription = function(desc)
     {
