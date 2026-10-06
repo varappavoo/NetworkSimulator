@@ -51,6 +51,14 @@ var UIMenu = function(description, X,Y, fixed)
         return visible;
     };
 
+    this.hideAfterAction = function()
+    {
+        if (visible)
+        {
+            this.hide();
+        }
+    };
+
     this.addEntry = function(img, text, js)
     {
         var data = {};
