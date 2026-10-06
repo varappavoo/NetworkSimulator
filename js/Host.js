@@ -64,8 +64,13 @@ function saveNameGroup(id)
 
 function networkDiagnostics(id)
 {
+    var host = network.getElement(id);
+    if (host !== null && host.getMenu().getVisible())
+    {
+        host.getMenu().hide();
+    }
     createBkDiv();
-    createDiagnosticsDiv(id);    
+    createDiagnosticsDiv(id);
 }
 
 function createDiagnosticsDiv(id)
@@ -120,8 +125,16 @@ function diagnosticsTraceroute(id)
 
 function cancelDiagnostics()
 {
-    removeBodyDiv('divbk');    
-    uimanager.getWindow("divdiagnostics").dispose();
+    var w = uimanager.getWindow("divdiagnostics");
+    if (w !== undefined && w !== null)
+    {
+        w.dispose();
+    }
+    var bk = document.getElementById("divbk");
+    if (bk !== null && bk.parentNode)
+    {
+        bk.parentNode.removeChild(bk);
+    }
 }
 
 function editNATTable(id) 
