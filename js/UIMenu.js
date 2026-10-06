@@ -91,33 +91,77 @@ var UIMenu = function(description, X,Y, fixed)
 
     this.show = function()
     {
-        var div = document.createElement("div");
-        div.setAttribute("id",id);
-        div.setAttribute("style","width:200px;background-color:#EEEEEE;border:3px solid white;position:"+ (fixed?"fixed":"absolute") +";top:"+Y+"px;left:"+X+"px;font-size:0.8em;padding:0px 10px 0px;");
+        // Avoid duplicate menu nodes if show() is called twice.
+        var oldDiv = document.getElementById(id);
+        if (oldDiv && oldDiv.parentNode)
+        {
+            oldDiv.parentNode.removeChild(oldDiv);
+        }
 
-        var innerHtml = "<span style='font-weight:bold'>" + _(description) + "</span><hr/>";
+        var div = document.createElement("div");
+        div.setAttribute("id", id);
+        div.className = "ns-menu" + (fixed ? " ns-menu-fixed" : "");
+        div.style.position = fixed ? "fixed" : "absolute";
+        div.style.visibility = "hidden";
+        div.style.zIndex = "1000";
+
+        var title = document.createElement("div");
+        title.className = "ns-menu-title";
+        title.textContent = _(description);
+        div.appendChild(title);
+
+        var items = document.createElement("div");
+        items.className = "ns-menu-items";
 
         for (var i = 0; i < entries.length; i++)
         {
-            innerHtml += "<a href='#' onclick='"+ entries[i].js +"uimanager.menuOptionClicked();'>";
-            innerHtml += "<img src='"+ entries[i].img +"' style='max-height:32px;max-width:32px;' />";
-            innerHtml += "<span id='" +entries[i].id+ "'>" + _(entries[i].text) + "</span></a><br/>";
-            if (i !== entries.length - 1)
-            {
-                innerHtml += "<hr/>"
-            }
+            var link = document.createElement("a");
+            link.href = "#";
+            link.className = "ns-menu-item";
+            link.setAttribute("onclick", entries[i].js + "uimanager.menuOptionClicked();return false;");
+
+            var img = document.createElement("img");
+            img.src = entries[i].img;
+            img.alt = "";
+            link.appendChild(img);
+
+            var span = document.createElement("span");
+            span.id = entries[i].id;
+            span.textContent = _(entries[i].text);
+            link.appendChild(span);
+            items.appendChild(link);
         }
 
-        div.innerHTML = innerHtml;
-
+        div.appendChild(items);
         document.body.appendChild(div);
+
+        // Keep contextual menus close to the selected object, but never let
+        // them disappear beyond the visible browser window.
+        var gap = 10;
+        var menuWidth = div.offsetWidth;
+        var menuHeight = div.offsetHeight;
+        var scrollX = fixed ? 0 : window.pageXOffset;
+        var scrollY = fixed ? 0 : window.pageYOffset;
+        var minX = scrollX + gap;
+        var minY = scrollY + gap;
+        var maxX = scrollX + document.documentElement.clientWidth - menuWidth - gap;
+        var maxY = scrollY + document.documentElement.clientHeight - menuHeight - gap;
+        var left = Math.max(minX, Math.min(X, maxX));
+        var top = Math.max(minY, Math.min(Y, maxY));
+
+        div.style.left = left + "px";
+        div.style.top = top + "px";
+        div.style.visibility = "visible";
         visible = true;
     };
 
     this.hide = function()
     {
         var div = document.getElementById(id);
-        document.body.removeChild(div);
+        if (div && div.parentNode)
+        {
+            div.parentNode.removeChild(div);
+        }
         visible = false;
     };
 
