@@ -144,6 +144,7 @@ var UIManager = function()
     var elemRect = null;
     var move_X = 0;
     var move_Y = 0;
+    var element_dragged = false;
 
     function switchMainMenu(params)
     {
@@ -278,9 +279,7 @@ var UIManager = function()
         elemRect = new UIRectangle(switchSelectedMenu, e.getMenu(), _self, rect.x + rect.width - 10, rect.y, 10, 10, 50);
         e.getMenu().setCanvasPos(rect.x + rect.width + 12, rect.y);
         _self.addClickable(elemRect);
-        // A normal click selects the device and opens its contextual menu.
-        // Dragging still works because the menu follows the drawable.
-        e.getMenu().show();
+        element_dragged = false;
     }
 
     function selectLink(l)
@@ -290,7 +289,6 @@ var UIManager = function()
         elemRect = new UIRectangle(switchSelectedMenu, l.getMenu(), _self, vertices.x - 5, vertices.y - 5, 10, 10, 50);
         l.getMenu().setCanvasPos(vertices.x + 12, vertices.y - 5);
         _self.addClickable(elemRect);
-        l.getMenu().show();
     }
 
     this.drawableChanged = function()
@@ -416,9 +414,18 @@ var UIManager = function()
                 switch (action)
                 {
                     case ACTION_MOUSE_UP:
-                        state = STATE_ELEMENT_SELECTED_MOUSE_UP;
+                        if (element_dragged)
+                        {
+                            state = STATE_ELEMENT_SELECTED_MOUSE_UP;
+                        }
+                        else
+                        {
+                            network.getSelected().getMenu().show();
+                            state = STATE_ELEMENT_MENU_VISIBLE;
+                        }
                         break;
                     case ACTION_MOUSE_MOVE:
+                        element_dragged = true;
                         network.getSelected().getDrawable().setPosition(X - click_offset_x, Y - click_offset_y);
                         break;
                 }
@@ -747,7 +754,10 @@ var UIManager = function()
     this.removeClickable = function(c)
     {
         var index = clickables.indexOf(c);
-        clickables.splice(index, 1);
+        if (index >= 0)
+        {
+            clickables.splice(index, 1);
+        }
     };
 
     function renderMainMenu(ctx)
