@@ -439,7 +439,7 @@ var Host = function(type, ports)
     {
         var rect = drawable.getRect();
         
-        menu.setCanvasPos(rect.x + rect.width + 8, rect.y);
+        menu.setCanvasPos(rect.x + rect.width + 12, rect.y);
     };
     
     function redoMenu() 
