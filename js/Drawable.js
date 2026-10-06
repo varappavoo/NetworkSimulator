@@ -84,14 +84,25 @@ var Drawable = function(c_owner)
     
     function drawInfo(ctx) 
     {
-        var pos = 8;
-        ctx.font = '8pt';
-        ctx.fillStyle = "black";
+        // Use a modern, pixel-sized canvas font. Integer pixel sizing and
+        // explicit text rendering settings keep configuration labels much
+        // sharper when the browser/canvas is zoomed.
+        var fontSize = 12;
+        var lineHeight = 15;
+        var pos = lineHeight;
+        ctx.font = "500 " + fontSize + "px Inter, \"Segoe UI\", Roboto, Arial, sans-serif";
+        ctx.fillStyle = "#172033";
+        ctx.textBaseline = "alphabetic";
+        ctx.textAlign = "left";
+        if ("fontKerning" in ctx)
+        {
+            ctx.fontKerning = "normal";
+        }
         var parts = owner.getStrInfo().split("\n");
         for (var i = 0; i < parts.length; i++) 
         {
             ctx.fillText(parts[i], 0, image.height + pos);
-            pos += 8;
+            pos += lineHeight;
         }
         if (DEBUG)
         {
