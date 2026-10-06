@@ -276,6 +276,7 @@ var UIManager = function()
         // Crear el rectángulo de despliegue de menú
         var rect = e.getDrawable().getRect();
         elemRect = new UIRectangle(switchSelectedMenu, e.getMenu(), _self, rect.x + rect.width - 10, rect.y, 10, 10, 50);
+        e.getMenu().setCanvasPos(rect.x + rect.width + 8, rect.y);
         _self.addClickable(elemRect);
     }
 
@@ -284,7 +285,7 @@ var UIManager = function()
         network.setSelected(l);
         var vertices = l.getCenter();
         elemRect = new UIRectangle(switchSelectedMenu, l.getMenu(), _self, vertices.x - 5, vertices.y - 5, 10, 10, 50);
-        l.getMenu().setPos(vertices.x + 5, vertices.y - 5);
+        l.getMenu().setCanvasPos(vertices.x + 8, vertices.y - 5);
         _self.addClickable(elemRect);
     }
 
