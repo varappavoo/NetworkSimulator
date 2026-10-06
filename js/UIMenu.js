@@ -51,6 +51,11 @@ var UIMenu = function(description, X,Y, fixed)
         return visible;
     };
 
+    this.isFixed = function()
+    {
+        return fixed;
+    };
+
     this.hideAfterAction = function()
     {
         if (visible)
@@ -126,7 +131,7 @@ var UIMenu = function(description, X,Y, fixed)
             var link = document.createElement("a");
             link.href = "#";
             link.className = "ns-menu-item";
-            link.setAttribute("onclick", entries[i].js + "uimanager.menuOptionClicked();return false;");
+            link.setAttribute("onclick", "uimanager.closeContextMenus();" + entries[i].js + "uimanager.menuOptionClicked();return false;");
 
             var img = document.createElement("img");
             img.src = entries[i].img;
