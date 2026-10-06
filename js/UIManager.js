@@ -276,8 +276,11 @@ var UIManager = function()
         // Crear el rectángulo de despliegue de menú
         var rect = e.getDrawable().getRect();
         elemRect = new UIRectangle(switchSelectedMenu, e.getMenu(), _self, rect.x + rect.width - 10, rect.y, 10, 10, 50);
-        e.getMenu().setCanvasPos(rect.x + rect.width + 8, rect.y);
+        e.getMenu().setCanvasPos(rect.x + rect.width + 12, rect.y);
         _self.addClickable(elemRect);
+        // A normal click selects the device and opens its contextual menu.
+        // Dragging still works because the menu follows the drawable.
+        e.getMenu().show();
     }
 
     function selectLink(l)
@@ -285,8 +288,9 @@ var UIManager = function()
         network.setSelected(l);
         var vertices = l.getCenter();
         elemRect = new UIRectangle(switchSelectedMenu, l.getMenu(), _self, vertices.x - 5, vertices.y - 5, 10, 10, 50);
-        l.getMenu().setCanvasPos(vertices.x + 8, vertices.y - 5);
+        l.getMenu().setCanvasPos(vertices.x + 12, vertices.y - 5);
         _self.addClickable(elemRect);
+        l.getMenu().show();
     }
 
     this.drawableChanged = function()
@@ -297,6 +301,7 @@ var UIManager = function()
 
             elemRect.X = rect.x + rect.width - 10;
             elemRect.Y = rect.y;
+            network.getSelected().getMenu().setCanvasPos(rect.x + rect.width + 12, rect.y);
         }
     };
 
