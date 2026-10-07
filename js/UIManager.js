@@ -144,7 +144,6 @@ var UIManager = function()
     var elemRect = null;
     var move_X = 0;
     var move_Y = 0;
-    var element_dragged = false;
 
     function switchMainMenu(params)
     {
@@ -279,7 +278,6 @@ var UIManager = function()
         elemRect = new UIRectangle(switchSelectedMenu, e.getMenu(), _self, rect.x + rect.width - 10, rect.y, 10, 10, 50);
         e.getMenu().setCanvasPos(rect.x + rect.width + 12, rect.y);
         _self.addClickable(elemRect);
-        element_dragged = false;
     }
 
     function selectLink(l)
@@ -414,17 +412,13 @@ var UIManager = function()
                 switch (action)
                 {
                     case ACTION_MOUSE_UP:
-                        // Preserve the original state transition. Opening the
-                        // contextual menu here is visual only; menu actions
-                        // continue to use the simulator's original state machine.
-                        if (!element_dragged && network.getSelected() !== null)
+                        if (network.getSelected() !== null)
                         {
                             network.getSelected().getMenu().show();
                         }
-                        state = STATE_ELEMENT_SELECTED_MOUSE_UP;
+                        state = STATE_ELEMENT_MENU_VISIBLE;
                         break;
                     case ACTION_MOUSE_MOVE:
-                        element_dragged = true;
                         network.getSelected().getDrawable().setPosition(X - click_offset_x, Y - click_offset_y);
                         break;
                 }
@@ -691,17 +685,6 @@ var UIManager = function()
         }
     }
 
-    this.closeContextMenus = function()
-    {
-        for (var id in menus)
-        {
-            if (menus[id].getVisible() && (!menus[id].isFixed || !menus[id].isFixed()))
-            {
-                menus[id].hide();
-            }
-        }
-    };
-
     this.menuOptionClicked = function()
     {
         dispatchEvent(-1, -1, ACTION_MENU_OPTION_CLICKED);
@@ -719,10 +702,7 @@ var UIManager = function()
 
     this.createLinkAction = function()
     {
-        // Create Link is a mode, not a normal menu action. Enter the mode
-        // directly so a following generic menu event cannot cancel/reset it.
-        hideAllMenus();
-        state = STATE_CREATING_LINK;
+        dispatchEvent(-1, -1, ACTION_CREATE_LINK);
     };
 
     function detectClick(X, Y)
