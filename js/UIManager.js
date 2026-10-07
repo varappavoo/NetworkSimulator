@@ -719,7 +719,10 @@ var UIManager = function()
 
     this.createLinkAction = function()
     {
-        dispatchEvent(-1, -1, ACTION_CREATE_LINK);
+        // Create Link is a mode, not a normal menu action. Enter the mode
+        // directly so a following generic menu event cannot cancel/reset it.
+        hideAllMenus();
+        state = STATE_CREATING_LINK;
     };
 
     function detectClick(X, Y)
