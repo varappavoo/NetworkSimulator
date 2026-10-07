@@ -131,7 +131,14 @@ var UIMenu = function(description, X,Y, fixed)
             var link = document.createElement("a");
             link.href = "#";
             link.className = "ns-menu-item";
-            link.setAttribute("onclick", entries[i].js + "uimanager.closeContextMenus();uimanager.menuOptionClicked();return false;");
+            if (entries[i].js.indexOf("createLinkAction()") !== -1)
+            {
+                link.setAttribute("onclick", entries[i].js + "uimanager.closeContextMenus();return false;");
+            }
+            else
+            {
+                link.setAttribute("onclick", entries[i].js + "uimanager.closeContextMenus();uimanager.menuOptionClicked();return false;");
+            }
 
             var img = document.createElement("img");
             img.src = entries[i].img;
